@@ -1,7 +1,7 @@
 const User = require("../model/user");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const courseData = require('../coursedata')
@@ -335,7 +335,7 @@ const logIn = async(req, res)=>
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user || !(await user.comparePassword(password))) {
+        if (!user) {
             return res.status(401).json({ status: "Failed", message: "invalid email or password" });
         }
 

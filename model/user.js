@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+// const bcrypt = require('bcryptjs');
+// const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     fullname: {
@@ -54,17 +54,17 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash password before saving user
-userSchema.pre('save', async function(next) {
-    if (this.isModified('password') || this.isNew) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-    next();
-});
+// userSchema.pre('save', async function(next) {
+//     if (this.isModified('password') || this.isNew) {
+//         this.password = await bcrypt.hash(this.password, 10);
+//     }
+//     next();
+// });
 
-// Method to compare hashed passwords
-userSchema.methods.comparePassword = function(candidatePassword) {
-    return bcrypt.compare(candidatePassword, this.password);
-};
+// // Method to compare hashed passwords
+// userSchema.methods.comparePassword = function(candidatePassword) {
+//     return bcrypt.compare(candidatePassword, this.password);
+// };
 
 
 module.exports = mongoose.model('User', userSchema);
