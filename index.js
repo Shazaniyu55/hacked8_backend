@@ -201,6 +201,19 @@ customCssUrl: CSS_URL,
 
 
 
+/**
+ * @swagger
+ * /api/auth/FE-Exam:
+ *  get:
+ *      summary: This API is used to get all the frontEnd exam on the frontend CBT UI
+ *      description: The API collects JSON data from the backend it is left for the frontend developer to collect this data and use it on the frontend .
+ *      responses:
+ *          200:
+ *              description: Success
+ *          400:
+ *              description: Bad Request
+ */
+
 
 app.get('/', (req, res)=>{
     res.send('welcome to Hacked8 Api server')

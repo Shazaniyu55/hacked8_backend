@@ -5,7 +5,8 @@ const crypto = require("crypto");
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const courseData = require('../coursedata')
-
+const Frontend  =  require("../cbtdatafrontend");
+const frontendExamData = require("../cbtdatafrontend");
 
 
 
@@ -368,6 +369,9 @@ const logIn = async(req, res)=>
 };
 
 
+const getExamFrontend = (req, res)=>{
+    res.status(200).json({status: "success", frontendExamData})
+}
 module.exports =
 {
     getUserById,
@@ -379,7 +383,8 @@ module.exports =
     resetPassword, 
     renderResetPasswordPage,
     getAllCourse,
-    buyCourse
+    buyCourse,
+    getExamFrontend
     
 
 };
