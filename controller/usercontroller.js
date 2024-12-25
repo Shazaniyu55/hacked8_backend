@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const courseData = require('../coursedata')
 const Frontend  =  require("../cbtdatafrontend");
 const frontendExamData = require("../cbtdatafrontend");
-
+const Course = require("../model/course")
 
 
 //function to request a password rest
@@ -372,6 +372,40 @@ const logIn = async(req, res)=>
 const getExamFrontend = (req, res)=>{
     res.status(200).json({status: "success", frontendExamData})
 }
+
+const uploadCourse = async(req, res)=>{
+    const {adminId} = req.query
+    const {name, description, title} = req.body;
+
+    try {
+     
+
+        if(!name || !description || !title){
+            res.status(400).json({status: "failed", message: "invalid admin"})
+        }else{
+            const uploadedCourse = new Course({
+                name,
+                title,
+                createdBy: adminId,
+                description,
+                
+            })
+    
+            await uploadedCourse.save();
+            res.status(200).json({status: "success", message: "course uploaded successfully"})
+        }
+    
+    
+        
+    } catch (error) {
+        res.status(500).json({status: "internal server error", error})
+    }
+
+
+
+
+
+}
 module.exports =
 {
     getUserById,
@@ -384,7 +418,8 @@ module.exports =
     renderResetPasswordPage,
     getAllCourse,
     buyCourse,
-    getExamFrontend
+    getExamFrontend,
+    uploadCourse
     
 
 };

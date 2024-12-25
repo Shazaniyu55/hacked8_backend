@@ -16,7 +16,7 @@ const options = {
         },
         servers:[
             {
-                url:'https://hacked-backend.vercel.app/'
+                url:'http://localhost:3400/'
             }
         ]
     },
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use(cors({
-    origin: "https://hacked-backend.vercel.app/",          // Removed the trailing slash
+    origin: "http://localhost:3400/",          // Removed the trailing slash
     methods: 'GET, POST, PUT, DELETE',       // Methods allowed
     allowedHeaders: 'Content-Type, Authorization' // Corrected 'authorization' to 'Authorization'
   }));
@@ -136,6 +136,42 @@ customCssUrl: CSS_URL,
  *              description: Unauthorized
  */
 
+
+/**
+ * @swagger
+ * /api/auth/uploadCourse:
+ *  post:
+ *      summary: upload a user course by the admin
+ *      description: endpoint to upload a user course to the system.
+ *      parameters:
+ *          - in: query
+ *            name: adminId
+ *            required: true
+ *            schema:
+ *              type: string
+ *            description: The ID of the admin to upload a course
+ *      requestBody:
+ *          require: true
+ *          content:
+ *             application/jsin:
+ *                schema:
+ *                   type: object
+ *                   properties:
+ *                      name:
+ *                        type: string
+ *                        example: niyu
+ *                      description:
+ *                         type: string
+ *                         example: frontend basics
+ *                      title:
+ *                         type: string
+ *                         example: introduction to HTML
+ *      responses:
+ *          200:
+ *              description: Course Uploaded successfully
+ *          404:
+ *              description: Upload error not found
+ */
 
 
 /**
