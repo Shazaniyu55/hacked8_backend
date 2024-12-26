@@ -7,8 +7,8 @@ const jwt = require('jsonwebtoken');
 const courseData = require('../coursedata')
 const Frontend  =  require("../cbtdatafrontend");
 const frontendExamData = require("../cbtdatafrontend");
-const Course = require("../model/course")
-
+const Course = require("../model/course");
+const Chat = require("../model/chat");
 
 //function to request a password rest
 const requestPasswordReset = async (req, res) => {
@@ -61,6 +61,27 @@ const requestPasswordReset = async (req, res) => {
     }
 };
 
+const createchat = async(req, res)=>{
+    const {userId, chattext} = req.body;
+    
+    try {
+
+        if(!userId|| !chattext){
+            res.status(400).json({status:"failed", message:"invalid user"})
+        }else{
+            const initiateChat = new Chat({
+                user: userId,
+                text: chattext
+            });
+            
+          await  initiateChat.save()
+          res.status(200).json({status:"success", mesaaeg: "chat sent"})
+        }
+        
+    } catch (error) {
+        res.status(500).json({status:'internal server error', message: error})
+    }
+}
 
 //function to reset password
 const resetPassword = async (req, res) => {
@@ -235,7 +256,18 @@ const updateUser = async (req, res) => {
     }
 };
 
+const examStart = async(req, res)=>{
+    const {ExamId, password} = req.body;
+    try {
+        if(!ExamId || !password){
 
+        }else{
+            
+        }
+    } catch (error) {
+        res.status(500).json({status:"failed", message: error})
+    }
+}
 
 
 const getUserById = async(userId)=>{
@@ -419,7 +451,9 @@ module.exports =
     getAllCourse,
     buyCourse,
     getExamFrontend,
-    uploadCourse
+    uploadCourse,
+    createchat,
+    examStart
     
 
 };

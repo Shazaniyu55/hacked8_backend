@@ -251,6 +251,33 @@ customCssUrl: CSS_URL,
  */
 
 
+/**
+ * @swagger
+ * /api/auth/chat:
+ *  post:
+ *      summary: This API is used to chat with the admin
+ *      description: Verifies user credentials.
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          userId:
+ *                              type: number
+ *                              example: 6364646446
+ *                          chattext:
+ *                              type: string
+ *                              example: hello admin!.
+ *      responses:
+ *          200:
+ *              description: chat successful
+ *          401:
+ *              description: Unsuccessful
+ */
+
+
 app.get('/', (req, res)=>{
     res.send('welcome to Hacked8 Api server')
 })
