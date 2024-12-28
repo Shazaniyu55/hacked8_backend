@@ -257,10 +257,10 @@ const updateUser = async (req, res) => {
 };
 
 const examStart = async(req, res)=>{
-    const {ExamId, password} = req.body;
+    const {ExamId, password, currentIp} = req.body;
     try {
-        if(!ExamId || !password){
-
+        if(!ExamId || !password || !currentIp){
+            
         }else{
             
         }

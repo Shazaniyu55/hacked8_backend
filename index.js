@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const swaggerjsdocs = require('swagger-jsdoc');
 const swaggerui = require("swagger-ui-express");
-const port = 3400;
+const port = 3100;
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const userRoutes = require('./routes/userroutes')
@@ -281,6 +281,7 @@ customCssUrl: CSS_URL,
 app.get('/', (req, res)=>{
     res.send('welcome to Hacked8 Api server')
 })
+
 
 
 app.listen(port, ()=>{
