@@ -10,6 +10,23 @@ const frontendExamData = require("../cbtdatafrontend");
 const Course = require("../model/course");
 const Chat = require("../model/chat");
 
+
+
+const initiateVideoConferenceCall = async(userId1, userId2)=>{}
+
+
+const videoChat = async(req, res)=>{
+    try {
+        const {user1, user2} = req.body
+        
+        await initiateVideoConferenceCall(user1, user2);
+
+    } catch (error) {
+        res.status(500).json({status:"failed", message:"Internal server error"});
+        
+    }
+}
+
 //function to request a password rest
 const requestPasswordReset = async (req, res) => {
     const { email } = req.body;

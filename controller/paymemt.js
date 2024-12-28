@@ -25,7 +25,7 @@ const subscriptionFee = async (req, res) => {
     const response = await axios.post('https://api.paystack.co/transaction/initialize', {
       amount: package * 100,
       currency: 'NGN',
-      callback_url: `http://localhost:3500/api/payment/verify-payment?userId=${userId}`,
+      callback_url: `http://localhost:3100/api/payment/verify-payment?userId=${userId}`,
       email: email,
       name: name,
     }, {

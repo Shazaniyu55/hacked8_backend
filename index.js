@@ -62,7 +62,7 @@ const options = {
         },
         servers:[
             {
-                url:'https://hacked-backend.vercel.app/'
+                url:'http://localhost:3100/'
             }
         ]
     },
@@ -72,12 +72,12 @@ const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger
 
 const swaggerSpec = swaggerjsdocs(options);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'assets')));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use(cors({
-    origin: "https://hacked-backend.vercel.app/",          // Removed the trailing slash
+    origin: "http://localhost:3100/",          // Removed the trailing slash
     methods: 'GET, POST, PUT, DELETE',       // Methods allowed
     allowedHeaders: 'Content-Type, Authorization' // Corrected 'authorization' to 'Authorization'
   }));
@@ -325,13 +325,33 @@ customCssUrl: CSS_URL,
  */
 
 
+
+/**
+ * @swagger
+ * /api/auth/course:
+ *  get:
+ *      summary: This API is used to get all the frontEnd exam on the frontend CBT UI
+ *      description: The API collects JSON data from the backend it is left for the frontend developer to collect this data and use it on the frontend .
+ *      responses:
+ *          200:
+ *              description: Success
+ *          400:
+ *              description: Bad Request
+ */
+
+
+
+
+
+
+
 app.get('/', (req, res)=>{
     res.send('welcome to Hacked8 Api server')
 })
 
 
 
-server.listen(port, ()=>{
+app.listen(port, ()=>{
     console.log(`server running at port http://localhost:${port}`)
 });
 
