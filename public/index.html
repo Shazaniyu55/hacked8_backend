@@ -21,7 +21,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/socket.io@4.5.4/dist/socket.io.min.js"></script>
     <script>
-        const socket = io();
+        const socket = io('https://hacked8-backend.vercel.app/');
         const videosDiv = document.getElementById('videos');
         const peers = {};
         let localStream;
