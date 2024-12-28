@@ -6,6 +6,52 @@ const port = 3100;
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const userRoutes = require('./routes/userroutes')
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require("path")
+const server = http.createServer(app);
+const io = new Server(server);
+
+const rooms = {}; 
+io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+
+    socket.on('join-room', (roomId) => {
+        socket.join(roomId);
+
+        if (!rooms[roomId]) {
+            rooms[roomId] = [];
+        }
+        rooms[roomId].push(socket.id);
+
+        // Notify other users in the room about the new user
+        socket.to(roomId).emit('user-joined', socket.id);
+        console.log(`User ${socket.id} joined room ${roomId}`);
+    });
+
+    socket.on('offer', (data) => {
+        socket.to(data.to).emit('offer', { from: socket.id, offer: data.offer });
+    });
+
+    socket.on('answer', (data) => {
+        socket.to(data.to).emit('answer', { from: socket.id, answer: data.answer });
+    });
+
+    socket.on('ice-candidate', (data) => {
+        socket.to(data.to).emit('ice-candidate', { from: socket.id, candidate: data.candidate });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected:', socket.id);
+
+        // Remove the user from any rooms they were part of
+        for (const roomId in rooms) {
+            rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
+            socket.to(roomId).emit('user-left', socket.id);
+        }
+    });
+});
+
 
 const options = {
     definition:{
@@ -26,6 +72,7 @@ const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger
 
 const swaggerSpec = swaggerjsdocs(options);
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -284,7 +331,7 @@ app.get('/', (req, res)=>{
 
 
 
-app.listen(port, ()=>{
+server.listen(port, ()=>{
     console.log(`server running at port http://localhost:${port}`)
 });
 

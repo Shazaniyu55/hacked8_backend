@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Conference</title>
+    <style>
+        video {
+            width: 300px;
+            margin: 10px;
+        }
+        #videos {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Conference</h1>
+    <div id="videos"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const videosDiv = document.getElementById('videos');
+        const peers = {};
+        let localStream;
+
+        // Get room ID from URL query or default
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get('room') || 'default-room';
+
+        // Get local media (camera and microphone)
+        async function setupLocalStream() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const localVideo = document.createElement('video');
+                localVideo.srcObject = localStream;
+                localVideo.autoplay = true;
+                localVideo.muted = true; // Avoid feedback
+                videosDiv.appendChild(localVideo);
+
+                socket.emit('join-room', roomId); // Join the room
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+            }
+        }
+
+        socket.on('user-joined', (userId) => {
+            console.log(`User joined: ${userId}`);
+            const peerConnection = createPeerConnection(userId);
+
+            // Create an offer
+            peerConnection.createOffer()
+                .then((offer) => peerConnection.setLocalDescription(offer))
+                .then(() => {
+                    socket.emit('offer', { to: userId, offer: peerConnection.localDescription });
+                });
+        });
+
+        socket.on('offer', async (data) => {
+            const peerConnection = createPeerConnection(data.from);
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+
+            socket.emit('answer', { to: data.from, answer: peerConnection.localDescription });
+        });
+
+        socket.on('answer', (data) => {
+            const peerConnection = peers[data.from];
+            peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+        });
+
+        socket.on('ice-candidate', (data) => {
+            const peerConnection = peers[data.from];
+            if (peerConnection) {
+                peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            }
+        });
+
+        socket.on('user-left', (userId) => {
+            console.log(`User left: ${userId}`);
+            if (peers[userId]) {
+                peers[userId].close();
+                delete peers[userId];
+                const video = document.getElementById(userId);
+                if (video) video.remove();
+            }
+        });
+
+        function createPeerConnection(userId) {
+            const peerConnection = new RTCPeerConnection();
+            peers[userId] = peerConnection;
+
+            // Add local tracks to the connection
+            localStream.getTracks().forEach((track) => {
+                peerConnection.addTrack(track, localStream);
+            });
+
+            // Handle remote stream
+            peerConnection.ontrack = (event) => {
+                const remoteVideo = document.createElement('video');
+                remoteVideo.id = userId;
+                remoteVideo.srcObject = event.streams[0];
+                remoteVideo.autoplay = true;
+                videosDiv.appendChild(remoteVideo);
+            };
+
+            // Handle ICE candidates
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    socket.emit('ice-candidate', { to: userId, candidate: event.candidate });
+                }
+            };
+
+            return peerConnection;
+        }
+
+        // Initialize local stream
+        setupLocalStream();
+    </script>
+</body>
+</html>
