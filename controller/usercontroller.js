@@ -12,20 +12,40 @@ const Chat = require("../model/chat");
 
 
 
-const initiateVideoConferenceCall = async(userId1, userId2)=>{}
-
-
-const videoChat = async(req, res)=>{
-    try {
-        const {user1, user2} = req.body
-        
-        await initiateVideoConferenceCall(user1, user2);
-
-    } catch (error) {
-        res.status(500).json({status:"failed", message:"Internal server error"});
-        
-    }
+function calculateProgress(course) {
+    const totalTopics = course.topics.length;
+    const completedTopics = course.topics.filter(topic => topic.completed).length;
+    return ((completedTopics / totalTopics) * 100).toFixed(2); // Progress in percentage
 }
+
+// Example Usage
+courseData.forEach(course => {
+    console.log(`Progress for ${course.title}: ${calculateProgress(course)}%`);
+});
+
+
+function markTopicComplete(courseId, topicId) {
+    const course = courseData.find(c => c.id === courseId);
+    if (!course) {
+        console.error("Course not found");
+        return;
+    }
+
+    const topic = course.topics.find(t => t.id === topicId);
+    if (!topic) {
+        console.error("Topic not found");
+        return;
+    }
+
+    topic.completed = true;
+    console.log(`Marked "${topic.title}" as complete in "${course.title}"`);
+}
+
+// Example Usage
+markTopicComplete("2", "2.1"); // Marks the first topic of the first course as complete
+console.log(courseData[1].topics); // Check updated status
+
+
 
 //function to request a password rest
 const requestPasswordReset = async (req, res) => {
