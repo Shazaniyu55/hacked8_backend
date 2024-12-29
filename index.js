@@ -6,51 +6,68 @@ const port = 3100;
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const userRoutes = require('./routes/userroutes')
-const http = require('http');
-const { Server } = require('socket.io');
+const server = require("http").Server(app);
 const path = require("path")
-const server = http.createServer(app);
-const io = new Server(server);
+const io = require("socket.io")(server, {
+    cors: {
+      origin: '*'
+    }
+  });
+const {v4:uuidv4} = require("uuid")
 
-const rooms = {}; 
-io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+// const rooms = {}; 
+// io.on('connection', (socket) => {
+//     console.log('A user connected:', socket.id);
 
-    socket.on('join-room', (roomId) => {
-        socket.join(roomId);
+//     socket.on('join-room', (roomId) => {
+//         socket.join(roomId);
 
-        if (!rooms[roomId]) {
-            rooms[roomId] = [];
-        }
-        rooms[roomId].push(socket.id);
+//         if (!rooms[roomId]) {
+//             rooms[roomId] = [];
+//         }
+//         rooms[roomId].push(socket.id);
 
-        // Notify other users in the room about the new user
-        socket.to(roomId).emit('user-joined', socket.id);
-        console.log(`User ${socket.id} joined room ${roomId}`);
-    });
+//         // Notify other users in the room about the new user
+//         socket.to(roomId).emit('user-joined', socket.id);
+//         console.log(`User ${socket.id} joined room ${roomId}`);
+//     });
 
-    socket.on('offer', (data) => {
-        socket.to(data.to).emit('offer', { from: socket.id, offer: data.offer });
-    });
+//     socket.on('offer', (data) => {
+//         socket.to(data.to).emit('offer', { from: socket.id, offer: data.offer });
+//     });
 
-    socket.on('answer', (data) => {
-        socket.to(data.to).emit('answer', { from: socket.id, answer: data.answer });
-    });
+//     socket.on('answer', (data) => {
+//         socket.to(data.to).emit('answer', { from: socket.id, answer: data.answer });
+//     });
 
-    socket.on('ice-candidate', (data) => {
-        socket.to(data.to).emit('ice-candidate', { from: socket.id, candidate: data.candidate });
-    });
+//     socket.on('ice-candidate', (data) => {
+//         socket.to(data.to).emit('ice-candidate', { from: socket.id, candidate: data.candidate });
+//     });
 
-    socket.on('disconnect', () => {
-        console.log('A user disconnected:', socket.id);
+//     socket.on('disconnect', () => {
+//         console.log('A user disconnected:', socket.id);
 
-        // Remove the user from any rooms they were part of
-        for (const roomId in rooms) {
-            rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
-            socket.to(roomId).emit('user-left', socket.id);
-        }
-    });
+//         // Remove the user from any rooms they were part of
+//         for (const roomId in rooms) {
+//             rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
+//             socket.to(roomId).emit('user-left', socket.id);
+//         }
+//     });
+// });
+
+io.on("connection", (socket) => {
+    socket.on("join-room", (roomId, userId) => {
+      socket.join(roomId);
+      setTimeout(()=>{
+        socket.to(roomId).broadcast.emit("user-connected", userId);
+      }, 1000)
+    
+    socket.on("disconnect",() => {
+        console.log("User Disconnected");
+        io.emit("user-disconnected",userId)
+    })
 });
+  });
 
 
 const options = {
@@ -72,7 +89,7 @@ const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger
 
 const swaggerSpec = swaggerjsdocs(options);
 
-app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -88,8 +105,13 @@ app.use("/api-docs", swaggerui.serve, swaggerui.setup(swaggerSpec, {
     '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
 customCssUrl: CSS_URL,
 }));
-
-
+const {ExpressPeerServer} = require("peer");
+const peerServer = ExpressPeerServer(server,{
+    debug: true
+});
+app.use("/peerjs",peerServer);
+app.set('view engine','ejs')
+app.set('views', path.join(__dirname, 'views')); 
 
 /**
  * @swagger
@@ -341,17 +363,23 @@ customCssUrl: CSS_URL,
 
 
 
+app.get('/',(req,res) => {
+    // res.send("Hello World")
+    res.redirect(`/${uuidv4()}`);
+  })
+  
 
 
 
+// app.get('/', (req, res)=>{
+//     res.send('welcome to Hacked8 Api server')
+// })
 
-app.get('/', (req, res)=>{
-    res.send('welcome to Hacked8 Api server')
+app.get('/:room',(req,res) => {
+    res.render("index",{roomId: req.params.room})
 })
 
-
-
-app.listen(port, ()=>{
+server.listen(port, ()=>{
     console.log(`server running at port http://localhost:${port}`)
 });
 
