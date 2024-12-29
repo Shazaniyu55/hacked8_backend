@@ -15,45 +15,6 @@ const io = require("socket.io")(server, {
   });
 const {v4:uuidv4} = require("uuid")
 
-// const rooms = {}; 
-// io.on('connection', (socket) => {
-//     console.log('A user connected:', socket.id);
-
-//     socket.on('join-room', (roomId) => {
-//         socket.join(roomId);
-
-//         if (!rooms[roomId]) {
-//             rooms[roomId] = [];
-//         }
-//         rooms[roomId].push(socket.id);
-
-//         // Notify other users in the room about the new user
-//         socket.to(roomId).emit('user-joined', socket.id);
-//         console.log(`User ${socket.id} joined room ${roomId}`);
-//     });
-
-//     socket.on('offer', (data) => {
-//         socket.to(data.to).emit('offer', { from: socket.id, offer: data.offer });
-//     });
-
-//     socket.on('answer', (data) => {
-//         socket.to(data.to).emit('answer', { from: socket.id, answer: data.answer });
-//     });
-
-//     socket.on('ice-candidate', (data) => {
-//         socket.to(data.to).emit('ice-candidate', { from: socket.id, candidate: data.candidate });
-//     });
-
-//     socket.on('disconnect', () => {
-//         console.log('A user disconnected:', socket.id);
-
-//         // Remove the user from any rooms they were part of
-//         for (const roomId in rooms) {
-//             rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
-//             socket.to(roomId).emit('user-left', socket.id);
-//         }
-//     });
-// });
 
 io.on("connection", (socket) => {
     socket.on("join-room", (roomId, userId) => {
