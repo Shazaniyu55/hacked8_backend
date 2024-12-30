@@ -57,10 +57,10 @@ const frontendExamData = [
                 questionId: "q5",
                 questionText: "Which HTML tag is used to include JavaScript code?",
                 options: [
-                    { optionId: "o1", text: "<script>" },
-                    { optionId: "o2", text: "<javascript>" },
-                    { optionId: "o3", text: "<code>" },
-                    { optionId: "o4", text: "<js>" }
+                    { optionId: "o1", text: "script" },
+                    { optionId: "o2", text: "javascript" },
+                    { optionId: "o3", text: "code" },
+                    { optionId: "o4", text: "js" }
                 ],
                 correctOptionId: "o1",
                 difficulty: "Easy"
