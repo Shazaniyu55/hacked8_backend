@@ -9,7 +9,7 @@ const Frontend  =  require("../cbtdatafrontend");
 const frontendExamData = require("../cbtdatafrontend");
 const Course = require("../model/course");
 const Chat = require("../model/chat");
-
+const { v4: uuidv4 } = require('uuid');
 
 
 function calculateProgress(course) {
@@ -294,13 +294,15 @@ const updateUser = async (req, res) => {
 };
 
 const examStart = async(req, res)=>{
-    const {ExamId, password, currentIp} = req.body;
+    const {userId} = req.body;
     try {
-        if(!ExamId || !password || !currentIp){
-            
+        if(!userId){
+            res.status(400).json({status:"failed", message: "invalid user"})
         }else{
-            
+            const examId = generateExamId(userId);
+            res.status(200).json({status:"success", message: examId})
         }
+        
     } catch (error) {
         res.status(500).json({status:"failed", message: error})
     }
@@ -475,6 +477,15 @@ const uploadCourse = async(req, res)=>{
 
 
 }
+
+
+// Function to generate a unique examId
+const generateExamId = (userId) => {
+    const examId = `${userId.toString()}-${uuidv4()}`;
+    return examId;
+  };
+
+
 module.exports =
 {
     getUserById,
@@ -490,7 +501,8 @@ module.exports =
     getExamFrontend,
     uploadCourse,
     createchat,
-    examStart
+    examStart,
+    
     
 
 };

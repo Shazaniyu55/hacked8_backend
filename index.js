@@ -324,21 +324,35 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
-app.get('/',(req,res) => {
-    // res.send("Hello World")
-    res.redirect(`/${uuidv4()}`);
-  })
+/**
+ * @swagger
+ * /:room:
+ *  get:
+ *      summary: This API is used to add student to a video chat co-working space
+ *      description: The API utilizes sockets.io for bi-directional communication
+ *      responses:
+ *          200:
+ *              description: Success
+ *          400:
+ *              description: Bad Request
+ */
+
+
+// app.get('/',(req,res) => {
+//     // res.send("Hello World")
+//     res.redirect(`/${uuidv4()}`);
+//   })
   
 
 
 
-// app.get('/', (req, res)=>{
-//     res.send('welcome to Hacked8 Api server')
-// })
-
-app.get('/:room',(req,res) => {
-    res.render("index",{roomId: req.params.room})
+app.get('/', (req, res)=>{
+    res.send('welcome to Hacked8 Api server')
 })
+
+// app.get('/:room',(req,res) => {
+//     res.render("index",{roomId: req.params.room})
+// })
 
 server.listen(port, ()=>{
     console.log(`server running at port http://localhost:${port}`)
