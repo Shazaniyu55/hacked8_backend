@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use(cors({
-    origin: "http://localhost:2300/",          // Removed the trailing slash
+    origin: "http://localhost:2300",          // Removed the trailing slash
     methods: 'GET, POST, PUT, DELETE',       // Methods allowed
     allowedHeaders: 'Content-Type, Authorization' // Corrected 'authorization' to 'Authorization'
   }));
