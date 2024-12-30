@@ -204,6 +204,76 @@ const frontendExamData = [
                 difficulty: "Medium"
             }
         ]
+    },
+
+
+    {
+        examId: "FE103",
+        title: "CSS and Responsive Design",
+        duration: "30 minutes",
+        totalQuestions: 5,
+        questions: [
+            {
+                questionId: "q1",
+                questionText: "Which CSS property is used to change the text color?",
+                options: [
+                    { optionId: "o1", text: "background-color" },
+                    { optionId: "o2", text: "bg-color" },
+                    { optionId: "o3", text: "color" },
+                    { optionId: "o4", text: "background" }
+                ],
+                correctOptionId: "o3",
+                difficulty: "Easy"
+            },
+            {
+                questionId: "q2",
+                questionText: "What is the purpose of media queries in CSS?",
+                options: [
+                    { optionId: "o1", text: "To load external CSS files" },
+                    { optionId: "o2", text: "To apply styles conditionally based on device properties" },
+                    { optionId: "o3", text: "To debug CSS styles" },
+                    { optionId: "o4", text: "To set the screen resolution" }
+                ],
+                correctOptionId: "o2",
+                difficulty: "Medium"
+            },
+            {
+                questionId: "q3",
+                questionText: "What does 'flex: 1' mean in CSS Flexbox?",
+                options: [
+                    { optionId: "o1", text: "The element takes all available space" },
+                    { optionId: "o2", text: "The element shrinks if necessary" },
+                    { optionId: "o3", text: "The element grows to fill available space proportionally" },
+                    { optionId: "o4", text: "The element remains static" }
+                ],
+                correctOptionId: "o3",
+                difficulty: "Medium"
+            },
+            {
+                questionId: "q4",
+                questionText: "Which CSS framework is widely used for responsive web design?",
+                options: [
+                    { optionId: "o1", text: "Bootstrap" },
+                    { optionId: "o2", text: "Foundation" },
+                    { optionId: "o3", text: "Bulma" },
+                    { optionId: "o4", text: "All of the above" }
+                ],
+                correctOptionId: "o4",
+                difficulty: "Easy"
+            },
+            {
+                questionId: "q5",
+                questionText: "Which CSS property is used to control the stacking order of elements?",
+                options: [
+                    { optionId: "o1", text: "z-index" },
+                    { optionId: "o2", text: "stack" },
+                    { optionId: "o3", text: "order" },
+                    { optionId: "o4", text: "index" }
+                ],
+                correctOptionId: "o1",
+                difficulty: "Medium"
+            }
+        ]
     }
 ];
 
