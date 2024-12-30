@@ -21,10 +21,10 @@ const frontendExamData = [
                 questionId: "q2",
                 questionText: "Which of the following tags is used to create a hyperlink in HTML?",
                 options: [
-                    { optionId: "o1", text: "<a>" },
-                    { optionId: "o2", text: "<link>" },
-                    { optionId: "o3", text: "<href>" },
-                    { optionId: "o4", text: "<hyperlink>" }
+                    { optionId: "o1", text: "a" },
+                    { optionId: "o2", text: "link" },
+                    { optionId: "o3", text: "href" },
+                    { optionId: "o4", text: "hyperlink" }
                 ],
                 correctOptionId: "o1",
                 difficulty: "Easy"
