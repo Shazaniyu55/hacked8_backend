@@ -40,7 +40,7 @@ const options = {
         },
         servers:[
             {
-                url:'http://localhost:3100/'
+                url:'https://hacked-backend.vercel.app/'
             }
         ]
     },
@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use(cors({
-    origin: "http://localhost:3100/",          // Removed the trailing slash
+    origin: "https://hacked-backend.vercel.app/",          // Removed the trailing slash
     methods: 'GET, POST, PUT, DELETE',       // Methods allowed
     allowedHeaders: 'Content-Type, Authorization' // Corrected 'authorization' to 'Authorization'
   }));
